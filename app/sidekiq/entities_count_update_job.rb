@@ -15,7 +15,7 @@ class EntitiesCountUpdateJob
 
       chats = Chat.all
 
-      chats.find_each do |chat|
+      chats.each do |chat|
         chat_key = ChatHelpers.generate_key(chat.application_token, chat.chat_number)
         chat.messages_count = InMemoryManager.get(chat_key)
       end
