@@ -1,0 +1,57 @@
+exit
+Application.columns
+Application.columns
+Application.all
+clear
+Application.columns
+Application.columns
+clear
+rails generate model Chat chat_number:integer app:references messages_count:integer
+rails generate model Chat chat_number:integer app:references messages_count:integer
+rails generate model Chat chat_number:integer app:references messages_count:integer 
+rails generate model Chat chat_number:integer app:references messages_count:integer
+rails generate model Chat chat_number:integer app:references messages_count:integer
+rails generate model Chat chat_number:integer app_id:integer messages_count:integer
+exit
+Chat.all
+Chat.all
+rails db:migrate:status\
+exit
+exit
+ActiveRecord::SchemaMigration.all
+
+ActiveRecord::SchemaMigration.create!(version: '20240609224902')
+ActiveRecord::SchemaMigration.
+ActiveRecord::SchemaMigration.methods
+ActiveRecord::SchemaMigration.where(version: '20240609224902')
+exit
+exit
+redis = Redis.new
+Redis.get('101')
+Redis.get('APP-kvJohkBYcpCzefU6x1bJtMA3')
+exit
+Application.first
+Application.find_by(token: kvJohkBYcpCzefU6x1bJtMA3)
+Application.find_by(token: 'kvJohkBYcpCzefU6x1bJtMA3')
+exit
+Application.first.token
+rails routes
+exit
+Appl
+Application.first
+exit
+Redis.get('APP-PJg2o1mvQ7iBFBNHj4p77jyq')
+Redis.get('APP-PJg2o1mvQ7iBFBNHj4p7')
+clear
+exit
+Application.first.chats
+exit
+exit
+Redis.get('APP-mUZ8FUWUhca315PLyQc4fP5b')
+reload!
+Redis.get('APP-eiVwWJuSpEdEtLV8dp9AAbRH')
+Redis.get('CHAT-eiVwWJuSpEdEtLV8dp9AAbRH-1')
+Redis.get('CHAT-eiVwWJuSpEdEtLV8dp9AAbRH-1')
+Redis.get('CHAT-eiVwWJuSpEdEtLV8dp9AAbRH-1')
+Redis.get('CHAT-8aDTufNgy27SDq71N9UjR6CJ-1')
+exit
