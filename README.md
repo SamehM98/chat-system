@@ -78,6 +78,28 @@ This is API app for a chat system with ability to get, create, update Applicatio
   }
   ```
 
+#### Listing all applications
+
+- Endpoint: `GET /api/v1/applications`
+- Body:
+  ```json
+  {
+    "name": "Application 102"
+  }
+  ```
+- Response
+  ```json
+  [
+    {
+      "token": "Mxw6tenzvKxS1ndVNvxG8NvZ",
+      "name": "Application 102",
+      "chats_count": 0,
+      "created_at": "2024-06-12T20:36:30.094Z",
+      "updated_at": "2024-06-12T20:36:30.094Z"
+    }
+  ]
+  ```
+
 ### Chats
 #### Creating a chat
 
