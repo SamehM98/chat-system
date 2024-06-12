@@ -175,4 +175,20 @@ This is API app for a chat system with ability to get, create, update Applicatio
 ]
 ```
 
+#### Listing all messages of a specific chat
+- Endpoint ` GET /api/v1/applications/{token}/chats/{chat_number}/messages `
+- Response
+```json
+[
+  {
+      "number": 1,
+      "body": "This is a message updated"
+  },
+  {
+      "number": 3,
+      "body": "message"
+  }
+]
+```
+
 
