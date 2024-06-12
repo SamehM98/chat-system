@@ -101,7 +101,7 @@ This is API app for a chat system with ability to get, create, update Applicatio
 }
 ```
 
-### Listing all chats of an app
+#### Listing all chats of an app
 - Endpoint ` GET /api/v1/applications/{token}/chats/ `
 - Response
 ```json
@@ -113,4 +113,66 @@ This is API app for a chat system with ability to get, create, update Applicatio
     "updated_at": "2024-06-12T20:51:14.432Z"
   }
 ]
+```
+
+### Messages
+
+#### Creating a message
+- Endpoint ` POST /api/v1/applications/{token}/chats/{chat_number}/messages `
+- Body:
+```json
+  {
+      "body": "This is a message"
+  }
+```
+- Response
+```json
+{
+    "number": 1,
+    "body": "This is a message"
+}
+```
+
+#### Updating a message
+- Endpoint ` PUT /api/v1/applications/{token}/chats/{chat_number}/messages/{message_number} `
+- Body:
+```json
+  {
+      "body": "This is a message updated"
+  }
+```
+- Response
+```json
+{
+    "number": 1,
+    "body": "This is a message updated"
+}
+```
+
+#### Getting a single message
+- Endpoint ` GET /api/v1/applications/{token}/chats/{chat_number}/messages/{message_number} `
+- Response
+```json
+{
+    "number": 1,
+    "body": "This is a message updated"
+}
+```
+
+#### Searching through messages of a specific chat
+- Endpoint ` GET /api/v1/applications/{token}/chats/{chat_number}/messages/search/query?={search_query} `
+- Response
+```json
+[
+  {
+      "number": 1,
+      "body": "This is a message updated"
+  },
+  {
+      "number": 3,
+      "body": "message"
+  }
+]
+```
+
 
