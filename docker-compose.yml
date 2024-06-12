@@ -1,0 +1,138 @@
+version: "3.9"
+
+networks:
+  chat_sys_network:
+
+volumes:
+  rails_bundle:
+  development_db_vol:
+  test_db_vol:
+  redis_vol:
+  elasticsearch_vol:
+
+
+services:
+  development_db:
+    &development_db
+    container_name: chat_sys_development_db
+    image: mysql:5.7
+    volumes:
+      - development_db_vol:/var/lib/mysql
+    env_file:
+      - .env
+    environment:
+      MYSQL_DATABASE: ${DEV_DB_NAME}
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+      MYSQL_USER: ${MYSQL_USER}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD}
+    networks:
+      - chat_sys_network
+
+  test_db:
+    <<: *development_db
+    container_name: chat_sys_test_db
+    image: mysql:5.7
+    volumes:
+      - test_db_vol:/var/lib/mysql
+    environment:
+      MYSQL_DATABASE: ${TEST_DB_NAME}
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+      MYSQL_USER: ${MYSQL_USER}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD}
+
+  app:
+    container_name: chat_system
+    hostname: chat_system
+    image: chat_system:1.0.0
+    build:
+      context: .
+      dockerfile: docker/Dockerfile
+      args:
+        APP_USER_ID: ${APP_USER_ID}
+    ports:
+      - "3000:3000"
+    stdin_open: true
+    tty: true
+    depends_on:
+      - development_db
+      - test_db
+      - elasticsearch
+      - redis
+    env_file:
+      - .env
+    environment:
+      DB_USERNAME: ${DB_USERNAME}
+      DB_PASSWORD: ${DB_PASSWORD}
+      DB_HOST: ${DB_HOST}
+      DB_PORT: ${DB_PORT}
+      REDIS_HOST: ${REDIS_HOST}
+      REDIS_PORT: ${REDIS_PORT}
+      ELASTICSEARCH_URL: ${ELASTICSEARCH_URL}
+    command: [ "rails", "server", "-b", "0.0.0.0", "-p", "3000" ]
+    volumes:
+      - ./:/home/chat_system_backend_user/chat_system:cached
+      - rails_bundle:/home/chat_system_backend_user/chat_system/bundle
+      - ~/.gitconfig:/etc/gitconfig
+    networks:
+      - chat_sys_network
+
+  redis:
+    container_name: chat_system_redis
+    image: redis:7-alpine
+    command: redis-server
+    volumes:
+      - redis_vol:/data
+    ports:
+      - "6379:6379"
+    networks:
+      - chat_sys_network
+
+  sidekiq:
+    container_name: chat_system_sidekiq
+    command: bundle exec sidekiq
+    build:
+      context: .
+      dockerfile: docker/Dockerfile
+      args:
+        APP_USER_ID: ${APP_USER_ID}
+    volumes:
+      - .:/home/chat_system_backend_user/chat_system
+      - ./:/home/chat_system_backend_user/chat_system:cached
+      - rails_bundle:/home/chat_system_backend_user/chat_system/bundle
+    env_file:
+      - .env
+    environment:
+      DB_USERNAME: ${DB_USERNAME:-root}
+      DB_PASSWORD: ${DB_PASSWORD:-password}
+      DB_HOST: ${DB_HOST}
+      DB_PORT: ${DB_PORT:-3306}
+      REDIS_HOST:  ${REDIS_HOST:-redis}
+      REDIS_PORT: ${REDIS_PORT:-6379}
+      ELASTICSEARCH_URL: ${ELASTICSEARCH_URL}
+    depends_on:
+      - redis
+      - development_db
+      - test_db
+      - elasticsearch
+    restart: always
+    networks:
+      - chat_sys_network
+
+
+  elasticsearch:
+    container_name: chat_system_elasticsearch
+    image: docker.elastic.co/elasticsearch/elasticsearch:7.17.16
+    environment:
+      - discovery.type=single-node
+      - bootstrap.memory_lock=true
+      - cluster.name=docker-cluster
+    ports:
+      - "9200:9200"
+    volumes:
+      - elasticsearch_vol:/usr/share/elasticsearch/data
+    ulimits:
+      memlock:
+        soft: -1
+        hard: -1
+    networks:
+      - chat_sys_network
